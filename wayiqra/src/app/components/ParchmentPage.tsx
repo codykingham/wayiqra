@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAudioMatcher } from '../hooks/useAudioMatcher';
 
 // SVG Icons
@@ -50,10 +50,42 @@ export function ParchmentPage() {
     reset,
     goPrev,
     goNext,
+    goTitle,
     totalLines,
   } = useAudioMatcher();
   
   const [showControls, setShowControls] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input/textarea/select or editable element
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      const isTypingTarget =
+        tag === 'input' ||
+        tag === 'textarea' ||
+        tag === 'select' ||
+        (target ? (target as HTMLElement).isContentEditable : false);
+
+      if (isTypingTarget) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (totalLines === 0) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === 'Escape' || e.key === 'Home') {
+        e.preventDefault();
+        goTitle();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown, { passive: false });
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [goNext, goPrev, goTitle, totalLines]);
 
   return (
     <div className="presentation-container">
@@ -92,6 +124,13 @@ export function ParchmentPage() {
       {/* Stamp-style control popup */}
       {showControls && (
         <div className="control-popup">
+          <button
+            className="control-btn home"
+            onClick={goTitle}
+            aria-label="Title view"
+          >
+            ⌂
+          </button>
           <button
             className="control-btn"
             onClick={goPrev}

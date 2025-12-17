@@ -446,6 +446,13 @@ export function useAudioMatcher() {
     if (next > refs.length - 1) return;
     goToIndex(next);
   }, [goToIndex]);
+
+  const goTitle = useCallback(() => {
+    // Return to "title" view without resetting progress or matcher position.
+    // Clear the confirmed line so rejects don't auto-pop back to the last line.
+    confirmedLineRef.current = null;
+    setCurrentLine(null);
+  }, []);
   
   const processPhrase = useCallback((speechDurationMs: number) => {
     console.log(`[Wayiqra] Processing phrase (${mfccFramesRef.current.length} frames)...`);
@@ -737,6 +744,7 @@ export function useAudioMatcher() {
     reset,
     goPrev,
     goNext,
+    goTitle,
     totalLines: audioFeatures.length,
   };
 }

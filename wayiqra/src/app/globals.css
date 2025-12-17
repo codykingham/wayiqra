@@ -1083,6 +1083,14 @@ body {
   cursor: not-allowed;
 }
 
+/* Make the home/title button easier to hit */
+.control-btn.home {
+  width: 34px;
+  height: 34px;
+  font-size: 18px;
+  line-height: 1;
+}
+
 /* Landscape media query - optimize for wide screens */
 @media (min-aspect-ratio: 4/3) {
   .presentation-content {
