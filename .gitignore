@@ -37,3 +37,9 @@ next-env.d.ts
 
 # others
 .audio
+
+# Audio feature dump (regenerate with npm run extract-features)
+wayiqra/public/audio-features.json
+
+# Audio files copied to public for extraction (large files)
+wayiqra/public/audio/
